@@ -106,6 +106,7 @@ function UsernameForm() {
   );
 
   return (
+    // if no username, display the form
     !username && (
       <section>
         <h3>Choose Username</h3>
