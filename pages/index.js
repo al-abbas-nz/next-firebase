@@ -1,8 +1,8 @@
 import styles from '../styles/Home.module.css';
-import Loader from '../components/Loader';
-import toast from 'react-hot-toast';
-import { firestore, fromMillis, postToJSON } from '../lib/firebase';
 import PostFeed from '../components/PostFeed';
+import Loader from '../components/Loader';
+import { firestore, fromMillis, postToJSON } from '../lib/firebase';
+
 import { useState } from 'react';
 
 // Max post to query per page
@@ -18,7 +18,7 @@ export async function getServerSideProps(context) {
   const posts = (await postsQuery.get()).docs.map(postToJSON);
 
   return {
-    props: { posts },
+    props: { posts }, // will be passed to the page component as props
   };
 }
 
@@ -46,12 +46,8 @@ export default function Home(props) {
 
     const newPosts = (await query.get()).docs.map((doc) => doc.data());
 
-    setPosts(posts.doncat(newPosts));
+    setPosts(posts.concat(newPosts));
     setLoading(false);
-
-    if (newPosts.length < LIMIT) {
-      setPostsEnd(true);
-    }
   };
 
   return (
@@ -63,6 +59,7 @@ export default function Home(props) {
       )}
 
       <Loader show={loading} />
+
       {postsEnd && 'You have reached the end!'}
     </main>
   );
